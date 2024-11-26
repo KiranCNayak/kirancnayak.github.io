@@ -1,0 +1,8 @@
+baseURL: https://knayak.dev/
+languageCode: en-us
+title: KCN Blog
+theme: PaperMod
+defaultTheme: dark
+params:
+  footer:
+    text: Learning is a journey, not a destination
