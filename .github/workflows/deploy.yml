@@ -1,0 +1,36 @@
+name: Build and Deploy Hugo Site
+
+on:
+  push:
+    branches:
+      - main # Trigger when changes are pushed to the 'main' branch
+  pull_request:
+    branches:
+      - main # Optionally, trigger on pull requests targeting 'main'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest # Use the latest Ubuntu runner
+
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Step 2: Set up Hugo
+      - name: Set up Hugo
+        uses: peaceiris/actions-hugo@v2
+        with:
+          hugo-version: "0.139.0" # Specify Hugo version (adjust as needed)
+
+      # Step 3: Build the Hugo site (this generates the 'public' folder)
+      - name: Build Hugo site
+        run: hugo # Generates the static site into the 'public' folder
+
+      # Step 4: Deploy the contents of the 'public' folder to GitHub Pages
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          personal_token: ${{ secrets.GITHUB_TOKEN }} # Use GitHub's default token for authentication
+          branch: gh-pages # Specify the branch where the site will be deployed (gh-pages)
+          folder: public # The folder to push (this is the Hugo output folder)
