@@ -32,5 +32,5 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           personal_token: ${{ secrets.GITHUB_TOKEN }} # Use GitHub's default token for authentication
-          branch: gh-pages # Specify the branch where the site will be deployed (gh-pages)
-          folder: public # The folder to push (this is the Hugo output folder)
+          publish_branch: gh-pages # Specify the branch where the site will be deployed (gh-pages)
+          publish_dir: public # The folder to push (this is the Hugo output folder)
