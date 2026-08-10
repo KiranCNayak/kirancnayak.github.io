@@ -1,0 +1,48 @@
+---
+import { site } from '../../data/site';
+import { HeroScene } from '../hero/HeroScene';
+---
+
+<section class="relative flex h-svh min-h-[560px] items-center justify-center overflow-hidden">
+  <div class="absolute inset-0">
+    <HeroScene client:only="react" />
+  </div>
+  <div class="pointer-events-none relative z-[5] mx-auto max-w-4xl px-6 text-center">
+    <p class="font-mono text-sm tracking-widest text-accent uppercase">{site.role}</p>
+    <h1 class="mt-4 font-display text-5xl font-bold tracking-tight sm:text-7xl">
+      <span class="glow-text">{site.name}</span>
+    </h1>
+    <p class="mx-auto mt-6 max-w-xl text-lg text-muted">{site.tagline}</p>
+    <div class="pointer-events-auto mt-10 flex justify-center gap-4">
+      <a
+        href="#projects"
+        class="rounded-full bg-accent px-6 py-3 text-sm font-medium text-bg transition hover:opacity-90"
+      >
+        See my work
+      </a>
+      <a
+        href="#contact"
+        class="glass rounded-full px-6 py-3 text-sm font-medium text-ink transition hover:border-accent/40"
+      >
+        Get in touch
+      </a>
+    </div>
+  </div>
+  <a
+    href="#about"
+    class="absolute bottom-20 left-1/2 z-[5] -translate-x-1/2 text-muted transition hover:text-ink max-sm:hidden"
+    aria-label="Scroll to about section"
+  >
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      class="animate-bounce"
+    >
+      <path d="M12 5v14M5 12l7 7 7-7"></path>
+    </svg>
+  </a>
+</section>

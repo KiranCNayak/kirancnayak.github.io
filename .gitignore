@@ -1,13 +1,8 @@
-# Compiled Object files, Static and Dynamic libs (Shared Objects)
-*.o
-*.a
-*.so
-
-# Folders
-_obj
-_test
-public
+node_modules/
+dist/
+.astro/
 
 .DS_Store
-.hugo_build.lock
-resources/_gen/
+
+.env
+.env.*

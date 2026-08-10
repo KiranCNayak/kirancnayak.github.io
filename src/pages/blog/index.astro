@@ -1,0 +1,27 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BlogCard from '../../components/BlogCard.astro';
+import { site } from '../../data/site';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+---
+
+<BaseLayout title="Blog" description={site.description}>
+  <div class="mx-auto max-w-3xl px-6 pt-36 pb-20">
+    <h1 class="font-display text-4xl md:text-5xl">
+      <span class="glow-text">Blog</span>
+    </h1>
+    <ul class="mt-12 flex flex-col gap-6">
+      {
+        posts.map((post) => (
+          <li data-reveal>
+            <BlogCard post={post} />
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</BaseLayout>

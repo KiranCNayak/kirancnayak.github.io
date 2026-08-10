@@ -1,0 +1,38 @@
+---
+import SectionShell from '../SectionShell.astro';
+import { projects } from '../../data/projects';
+---
+
+<SectionShell id="projects" title="Selected work" kicker="04 · Projects">
+  <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    {
+      projects.map((project) => (
+        <article class="glass group flex flex-col rounded-2xl p-6 transition hover:border-accent/30">
+          <h3 class="font-display text-lg font-bold transition group-hover:text-accent">
+            {project.name}
+          </h3>
+          <p class="mt-3 flex-1 text-sm text-muted">{project.description}</p>
+          <ul class="mt-4 flex flex-wrap gap-2">
+            {project.tech.map((t) => (
+              <li class="rounded-full border border-line px-2.5 py-0.5 text-xs text-muted">{t}</li>
+            ))}
+          </ul>
+          {(project.href || project.repo) && (
+            <div class="mt-5 flex gap-4 text-sm">
+              {project.href && (
+                <a href={project.href} class="text-accent underline-offset-4 hover:underline">
+                  Live ↗
+                </a>
+              )}
+              {project.repo && (
+                <a href={project.repo} class="text-accent underline-offset-4 hover:underline">
+                  Code ↗
+                </a>
+              )}
+            </div>
+          )}
+        </article>
+      ))
+    }
+  </div>
+</SectionShell>
