@@ -47,15 +47,23 @@ test.describe('accessibility pass', () => {
     expect(animation).toBe('none');
   });
 
-  test('project thumbnails are CLS-safe and described', async ({ page }) => {
+  test('any project thumbnails are CLS-safe and described', async ({ page }) => {
     await page.goto('/');
     const imgs = page.locator('#projects article img');
-    await expect(imgs).toHaveCount(3);
     for (const img of await imgs.all()) {
       await expect(img).toHaveAttribute('width', /\d+/);
       await expect(img).toHaveAttribute('height', /\d+/);
       await expect(img).toHaveAttribute('loading', 'lazy');
       expect(await img.getAttribute('alt')).not.toBeNull();
+    }
+  });
+
+  test('projects link out to real repos or demos', async ({ page }) => {
+    await page.goto('/');
+    const cards = page.locator('#projects article');
+    await expect(cards).toHaveCount(3);
+    for (const card of await cards.all()) {
+      await expect(card.locator('a[href^="http"]')).not.toHaveCount(0);
     }
   });
 
