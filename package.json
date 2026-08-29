@@ -13,6 +13,8 @@
     "lint:ci": "eslint . --max-warnings 0",
     "format": "prettier --write .",
     "format:ci": "prettier --check .",
+    "test:e2e": "playwright test tests/e2e/audit.spec.ts",
+    "test:screenshots": "playwright test tests/e2e/screenshots.spec.ts --grep @shot",
     "prepare": "husky"
   },
   "lint-staged": {
@@ -41,6 +43,7 @@
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
     "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.62.1",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/three": "~0.185.0",
