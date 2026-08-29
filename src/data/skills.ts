@@ -3,18 +3,21 @@ export interface SkillGroup {
   skills: string[];
 }
 
-// PLACEHOLDER DATA — replace with your real skills in src/data/skills.ts
 export const skillGroups: SkillGroup[] = [
   {
     title: 'Languages',
-    skills: ['TypeScript', 'JavaScript', 'Go', 'Python'],
+    skills: ['JavaScript', 'TypeScript', 'Go', 'Python', 'Swift'],
   },
   {
     title: 'Frontend',
-    skills: ['React', 'React Native', 'Astro', 'Tailwind CSS'],
+    skills: ['React', 'React Native', 'Next.js', 'Redux', 'Tailwind CSS', 'Astro'],
   },
   {
-    title: 'Backend & Infra',
-    skills: ['Node.js', 'PostgreSQL', 'Docker', 'GitHub Actions'],
+    title: 'Backend',
+    skills: ['Node.js', 'Go', 'LangGraph', 'REST APIs', 'PostgreSQL', 'MongoDB'],
+  },
+  {
+    title: 'Practice',
+    skills: ['Distributed systems', 'API design', 'Agile delivery', 'Git'],
   },
 ];
