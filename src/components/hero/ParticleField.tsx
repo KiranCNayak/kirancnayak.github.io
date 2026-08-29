@@ -1,17 +1,48 @@
-import { useMemo, useRef } from 'react';
 import { useFrame, useLoader, useThree } from '@react-three/fiber';
+import { useMemo, useRef } from 'react';
 import * as THREE from 'three';
+import {
+  ACCENT_A,
+  ACCENT_B,
+  ACCENT_WASH,
+  ALPHA_THRESHOLD,
+  ASSEMBLY_DURATION,
+  BG_DIST_SQ,
+  DENT_EASE,
+  DENT_RADIUS,
+  DENT_STRENGTH,
+  DENT_Z_LIFT,
+  DEPTH_JITTER,
+  DRIFT_AMP_ACTIVE,
+  DRIFT_AMP_IDLE,
+  DRIFT_FREQ_XA,
+  DRIFT_FREQ_XB,
+  DRIFT_FREQ_YA,
+  DRIFT_FREQ_YB,
+  DRIFT_FREQ_ZA,
+  DRIFT_FREQ_ZB,
+  DRIFT_SPEED_X,
+  DRIFT_SPEED_Y,
+  DRIFT_SPEED_Z,
+  EDGE_FADE_END,
+  EDGE_FADE_START,
+  OFFSET_EASE,
+  PARTICLE_ALPHA,
+  PHOTO_COLOR_WEIGHT,
+  PHOTO_URL,
+  POINT_SIZE_FACTOR,
+  PORTRAIT_BREAKPOINT,
+  PORTRAIT_OFFSET,
+  SCATTER_X,
+  SCATTER_Y,
+  SCATTER_Z,
+  TARGET_COUNT,
+  WORLD_HEIGHT,
+} from './particleConfig';
 import { lerpPointer, type PointerRef } from './usePointer';
 
-const PHOTO_URL = '/hero-photo.png';
-const TARGET_COUNT = 100000;
-const WORLD_HEIGHT = 3.3;
-const ALPHA_THRESHOLD = 96;
-// flood-fill background removal: how close a pixel must be to the border color to count as background
-const BG_DIST_SQ = 100 * 100;
-
-const ACCENT_A = new THREE.Color('#22d3ee');
-const ACCENT_B = new THREE.Color('#a78bfa');
+// GLSL float literal — interpolates a config constant into the shader source
+const f = (v: number) => v.toFixed(4);
 
 // deterministic PRNG (mulberry32) keeps render pure and the layout stable across re-renders
 function mulberry32(seed: number) {
@@ -123,7 +154,7 @@ function sampleImage(image: HTMLImageElement): Sampled {
 
     home[n * 3] = (gx / gridW - 0.5) * worldW;
     home[n * 3 + 1] = (0.5 - gy / gridH) * WORLD_HEIGHT;
-    home[n * 3 + 2] = (random() - 0.5) * 0.06;
+    home[n * 3 + 2] = (random() - 0.5) * DEPTH_JITTER;
 
     const alpha = data[i + 3]! / 255;
     const or = (data[i]! / 255) * alpha;
@@ -133,10 +164,10 @@ function sampleImage(image: HTMLImageElement): Sampled {
     // faithful photo colors with a slight wash of the site's accent scheme
     const mix = (gx / gridW) * 0.7 + (1 - gy / gridH) * 0.3;
     color.copy(ACCENT_A).lerp(ACCENT_B, mix);
-    const wash = (0.3 + 0.7 * lum) * 0.15;
-    colors[n * 3] = Math.min(1, or * 0.9 + color.r * wash);
-    colors[n * 3 + 1] = Math.min(1, og * 0.9 + color.g * wash);
-    colors[n * 3 + 2] = Math.min(1, ob * 0.9 + color.b * wash);
+    const wash = (0.3 + 0.7 * lum) * ACCENT_WASH;
+    colors[n * 3] = Math.min(1, or * PHOTO_COLOR_WEIGHT + color.r * wash);
+    colors[n * 3 + 1] = Math.min(1, og * PHOTO_COLOR_WEIGHT + color.g * wash);
+    colors[n * 3 + 2] = Math.min(1, ob * PHOTO_COLOR_WEIGHT + color.b * wash);
 
     seeds[n] = random();
   }
@@ -157,27 +188,27 @@ const vertexShader = /* glsl */ `
 
   void main() {
     // assembly intro: scattered cloud eases into the portrait
-    float progress = clamp(uTime / 2.2, 0.0, 1.0);
+    float progress = clamp(uTime / ${f(ASSEMBLY_DURATION)}, 0.0, 1.0);
     progress = 1.0 - pow(1.0 - progress, 3.0);
     vec3 scatter = position + vec3(
-      sin(aSeed * 78.233) * 3.5,
-      cos(aSeed * 12.9898) * 2.5,
-      sin(aSeed * 39.425) * 1.5
+      sin(aSeed * 78.233) * ${f(SCATTER_X)},
+      cos(aSeed * 12.9898) * ${f(SCATTER_Y)},
+      sin(aSeed * 39.425) * ${f(SCATTER_Z)}
     );
     vec3 pos = mix(scatter, position, progress);
 
     // gentle organic drift: each particle floats around its home position
-    float amp = mix(0.06, 0.025, uActive);
-    pos.x += sin(position.x * 2.1 + position.y * 1.3 + uTime * 0.7) * amp;
-    pos.y += cos(position.y * 1.9 + position.z * 1.1 + uTime * 0.6) * amp;
-    pos.z += sin(position.z * 2.3 + position.x * 0.9 + uTime * 0.5) * amp;
+    float amp = mix(${f(DRIFT_AMP_IDLE)}, ${f(DRIFT_AMP_ACTIVE)}, uActive);
+    pos.x += sin(position.x * ${f(DRIFT_FREQ_XA)} + position.y * ${f(DRIFT_FREQ_XB)} + uTime * ${f(DRIFT_SPEED_X)}) * amp;
+    pos.y += cos(position.y * ${f(DRIFT_FREQ_YA)} + position.z * ${f(DRIFT_FREQ_YB)} + uTime * ${f(DRIFT_SPEED_Y)}) * amp;
+    pos.z += sin(position.z * ${f(DRIFT_FREQ_ZA)} + position.x * ${f(DRIFT_FREQ_ZB)} + uTime * ${f(DRIFT_SPEED_Z)}) * amp;
 
     // pointer dent: particles bulge away from the cursor
     vec2 d = pos.xy - uPointer;
     float dist = length(d);
-    float force = (1.0 - smoothstep(0.0, 1.1, dist)) * 0.4 * uActive;
+    float force = (1.0 - smoothstep(0.0, ${f(DENT_RADIUS)}, dist)) * ${f(DENT_STRENGTH)} * uActive;
     pos.xy += (d / max(dist, 1e-4)) * force;
-    pos.z += force * 0.5;
+    pos.z += force * ${f(DENT_Z_LIFT)};
 
     vec4 mv = modelViewMatrix * vec4(pos, 1.0);
     gl_PointSize = uSize * (uScale / -mv.z);
@@ -192,8 +223,8 @@ const fragmentShader = /* glsl */ `
   void main() {
     vec2 uv = gl_PointCoord - 0.5;
     float d = dot(uv, uv);
-    if (d > 0.25) discard;
-    float alpha = (1.0 - smoothstep(0.16, 0.25, d)) * 0.88;
+    if (d > ${f(EDGE_FADE_END)}) discard;
+    float alpha = (1.0 - smoothstep(${f(EDGE_FADE_START)}, ${f(EDGE_FADE_END)}, d)) * ${f(PARTICLE_ALPHA)};
     gl_FragColor = vec4(vColor, alpha);
   }
 `;
@@ -203,7 +234,7 @@ function createUniforms(spacing: number) {
     uTime: { value: 0 },
     uPointer: { value: new THREE.Vector2(0, -10) },
     uActive: { value: 0 },
-    uSize: { value: spacing * 1.25 },
+    uSize: { value: spacing * POINT_SIZE_FACTOR },
     uScale: { value: 1 },
   };
 }
@@ -229,8 +260,8 @@ export default function ParticleField({ pointer }: { pointer: PointerRef }) {
     timeRef.current += dt;
 
     // from the lg breakpoint up the portrait sits right of center, beside the hero text
-    const offsetX = size.width >= 1024 ? viewport.width * 0.22 : 0;
-    group.position.x += (offsetX - group.position.x) * Math.min(1, 6 * delta);
+    const offsetX = size.width >= PORTRAIT_BREAKPOINT ? viewport.width * PORTRAIT_OFFSET : 0;
+    group.position.x += (offsetX - group.position.x) * Math.min(1, OFFSET_EASE * delta);
 
     const uniforms = material.uniforms;
     uniforms.uTime!.value = timeRef.current;
@@ -238,7 +269,8 @@ export default function ParticleField({ pointer }: { pointer: PointerRef }) {
       p.x * (viewport.width / 2) - group.position.x,
       p.y * (viewport.height / 2),
     );
-    uniforms.uActive!.value += ((p.active ? 1 : 0) - uniforms.uActive!.value) * Math.min(1, 4 * dt);
+    uniforms.uActive!.value +=
+      ((p.active ? 1 : 0) - uniforms.uActive!.value) * Math.min(1, DENT_EASE * dt);
     const camera = state.camera as THREE.PerspectiveCamera;
     uniforms.uScale!.value =
       (state.size.height * state.viewport.dpr) / (2 * Math.tan((camera.fov * Math.PI) / 360));

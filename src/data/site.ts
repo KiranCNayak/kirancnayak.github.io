@@ -9,7 +9,8 @@ export const site = {
   role: 'Software Engineer', // PLACEHOLDER — set your actual title in src/data/site.ts
   tagline: 'I build things for the web and beyond.', // PLACEHOLDER
   description:
-    'Portfolio and blog of Kiran C Nayak — software engineer. Learning is a journey, not a destination.',
+    'Portfolio and blog of Kiran C Nayak, software engineer. Learning is a journey, not a destination.',
+  // Forwarding alias — point this at your real inbox via your domain's mail settings.
   email: 'hello@knayak.dev',
   footerText: 'Learning is a journey, not a destination',
   socials: [

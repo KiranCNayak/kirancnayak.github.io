@@ -6,3 +6,11 @@ dist/
 
 .env
 .env.*
+
+screenshots/
+playwright-report/
+test-results/
+
+# local tooling
+.claude/
+.serena/

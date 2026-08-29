@@ -13,18 +13,21 @@ const links = [
 
 <header class="fixed inset-x-0 top-0 z-40">
   <nav
+    aria-label="Primary"
     class="glass mx-auto mt-4 flex max-w-5xl items-center justify-between rounded-full px-5 py-2.5 max-sm:mx-3"
   >
-    <a href="/" class="glow-text font-display text-lg font-bold" aria-label={site.name}>
+    <a href="/" class="font-display text-lg font-bold text-ink" aria-label={site.name}>
       {site.monogram}
     </a>
-    <ul class="flex items-center gap-1 text-sm text-muted max-sm:gap-0">
+
+    <!-- Desktop: inline links -->
+    <ul class="hidden items-center gap-1 text-sm text-muted sm:flex">
       {
         links.map((link) => (
           <li>
             <a
               href={link.href}
-              class="rounded-full px-3 py-1.5 transition-colors hover:bg-white/5 hover:text-ink max-sm:px-2"
+              class="rounded-full px-3 py-1.5 transition-colors hover:bg-white/5 hover:text-ink"
             >
               {link.label}
             </a>
@@ -32,5 +35,43 @@ const links = [
         ))
       }
     </ul>
+
+    <!-- Mobile: zero-JS disclosure menu -->
+    <details class="group relative sm:hidden">
+      <summary
+        class="flex size-9 cursor-pointer list-none items-center justify-center rounded-full text-muted transition-colors hover:text-ink [&::-webkit-details-marker]:hidden"
+        aria-label="Toggle navigation menu"
+      >
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          aria-hidden="true"
+        >
+          <path class="group-open:hidden" d="M4 7h16M4 12h16M4 17h16"></path>
+          <path class="hidden group-open:block" d="M6 6l12 12M18 6L6 18"></path>
+        </svg>
+      </summary>
+      <ul
+        class="absolute right-0 mt-3 flex w-44 flex-col rounded-2xl border border-line bg-surface p-2 text-sm text-muted shadow-xl shadow-black/40"
+      >
+        {
+          links.map((link) => (
+            <li>
+              <a
+                href={link.href}
+                class="block rounded-xl px-4 py-2.5 transition-colors hover:bg-white/5 hover:text-ink"
+              >
+                {link.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </details>
   </nav>
 </header>

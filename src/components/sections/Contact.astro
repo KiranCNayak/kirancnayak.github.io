@@ -3,14 +3,14 @@ import SectionShell from '../SectionShell.astro';
 import { site } from '../../data/site';
 ---
 
-<SectionShell id="contact" title="Let's talk" kicker="05 · Contact">
+<SectionShell id="contact" title="Let’s talk" kicker="Contact">
   <div class="glass mx-auto max-w-2xl rounded-2xl p-10 text-center">
     <p class="text-muted">
-      Whether it's an interesting problem, a collaboration, or just to say hi — my inbox is open.
+      Whether it’s an interesting problem, a collaboration, or just to say hi. My inbox is open.
     </p>
     <a
       href={`mailto:${site.email}`}
-      class="glow-text mt-6 inline-block font-display text-2xl font-bold sm:text-3xl"
+      class="mt-6 inline-block font-display text-2xl font-bold break-words text-accent sm:text-3xl"
     >
       {site.email}
     </a>

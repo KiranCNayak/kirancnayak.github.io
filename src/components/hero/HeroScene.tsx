@@ -15,7 +15,7 @@ function StaticFallback() {
       <div
         className="absolute top-2/3 left-1/3 h-[55vmin] w-[55vmin] -translate-x-1/2 -translate-y-1/2 rounded-full"
         style={{
-          background: 'radial-gradient(circle, rgba(167, 139, 250, 0.12) 0%, transparent 65%)',
+          background: 'radial-gradient(circle, rgba(245, 158, 11, 0.12) 0%, transparent 65%)',
         }}
       />
     </div>
@@ -47,7 +47,7 @@ export function HeroScene() {
   if (reducedMotion) return <StaticFallback />;
 
   return (
-    <div ref={wrapperRef} className="relative h-full w-full">
+    <div ref={wrapperRef} className="relative h-full w-full" aria-hidden="true">
       <div className="absolute inset-0" style={{ pointerEvents: 'none' }}>
         <Canvas
           dpr={[1, 2]}
