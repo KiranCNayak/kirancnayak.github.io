@@ -25,11 +25,11 @@ export const projects: Project[] = [
     repo: 'https://github.com/KiranCNayak/planning-poker',
   },
   {
-    name: 'knayak.dev',
+    name: 'knayak.fyi',
     description:
       'This site. Astro 5 with a single WebGL island: tens of thousands of particles sampled from a photo and animated entirely in a vertex shader, over a zero-JS content layer and an Astro-collections blog.',
     tech: ['Astro', 'React Three Fiber', 'Three.js', 'Tailwind CSS', 'TypeScript'],
-    href: 'https://knayak.dev',
+    href: 'https://knayak.fyi',
     repo: 'https://github.com/KiranCNayak/kirancnayak.github.io',
   },
 ];

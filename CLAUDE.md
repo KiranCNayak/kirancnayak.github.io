@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-Personal portfolio + blog for Kiran C Nayak at https://knayak.dev, built with Astro 5, deployed to GitHub Pages on every push to `main` via `.github/workflows/deploy.yml` (Node 22, `yarn build`, publishes `./dist`). Custom domain via `public/CNAME`.
+Personal portfolio + blog for Kiran C Nayak at https://knayak.fyi, built with Astro 5, deployed to GitHub Pages on every push to `main` via `.github/workflows/deploy.yml` (Node 22, `yarn build`, publishes `./dist`). Custom domain via `public/CNAME`.
 
 ## Commands
 
