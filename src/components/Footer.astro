@@ -1,5 +1,6 @@
 ---
 import { site } from '../data/site';
+import { version } from '../lib/version';
 
 const year = new Date().getFullYear();
 ---
@@ -19,5 +20,18 @@ const year = new Date().getFullYear();
       }
     </div>
     <p>© {year} {site.name}</p>
+    {
+      version.sha ? (
+        <a
+          href={`https://github.com/KiranCNayak/kirancnayak.github.io/commit/${version.sha}`}
+          title={`Deployed ${version.deployedAt}`}
+          class="font-mono text-xs text-muted/60 transition-colors hover:text-accent"
+        >
+          v{version.label}
+        </a>
+      ) : (
+        <span class="font-mono text-xs text-muted/60">v{version.label}</span>
+      )
+    }
   </div>
 </footer>
